@@ -29,12 +29,13 @@ exports.addSchool = async (req, res) => {
         });
     } catch (error) {
         if (error instanceof z.ZodError) {
+            const issues = error.errors || error.issues || [];
             return res.status(400).json({ 
                 error: 'Validation failed', 
-                details: error.errors.map(err => err.message) 
+                details: issues.map(err => err.message) 
             });
         }
-        console.error("Error adding school:", error.message);
+        console.error("Error adding school:", error.message || error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
